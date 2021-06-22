@@ -1,3 +1,10 @@
+## Unreleased
+
+### New Features
+
+- `bytes_used()` now supports `PassThrough` but is only correct for the root RNG
+  and not for spawned children.
+
 ## 1.0.0
 
 ### Breaking Changes

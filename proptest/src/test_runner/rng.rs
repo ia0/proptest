@@ -410,15 +410,22 @@ impl TestRng {
     }
 
     /// Dumps the bytes obtained from the RNG so far (only works if the RNG is
-    /// set to `Recorder`).
+    /// set to `Recorder` or `PassThrough`).
+    ///
+    /// Note that for `PassThrough`, the bytes used is not correctly reported
+    /// for new RNGs created using `new_rng`.
     ///
     /// ## Panics
     ///
-    /// Panics if this RNG does not capture generated data.
+    /// Panics if this RNG does not capture generated data or does not read from
+    /// pre-generated data.
     pub fn bytes_used(&self) -> Vec<u8> {
         match self.rng {
             TestRngImpl::Recorder { ref record, .. } => record.clone(),
-            _ => panic!("bytes_used() called on non-Recorder RNG"),
+            TestRngImpl::PassThrough { off, ref data, .. } => {
+                data[..off].into()
+            }
+            _ => panic!("bytes_used() called on non-Recorder/PassThrough RNG"),
         }
     }
 
